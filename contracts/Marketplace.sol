@@ -444,7 +444,7 @@ contract Marketplace is ReentrancyGuard {
         if(block.timestamp >= d_listings[_nftAddress][_nftId].endAt) {
             return d_listings[_nftAddress][_nftId].endPrice;
         }
-        uint256 elapsedTime = (block.timestamp - d_listings[_nftAddress][_nftId].startAt);
+        uint256 elapsedTime = (block.timestamp - d_listings[_nftAddress][_nftId].startAt)/60;
         uint256 discount = elapsedTime * d_listings[_nftAddress][_nftId].discountRate;
         uint256 currentPrice = (d_listings[_nftAddress][_nftId].startPrice - discount);
         return currentPrice;
