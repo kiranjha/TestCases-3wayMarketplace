@@ -406,7 +406,7 @@ describe("Listing Nft in Dutch Auction", () => {
         //Same Nft list again
         await expect(marketplace.connect(account1).addDutchAuction(nftContract.address,0,ethers.utils.parseEther("5"),ethers.utils.parseEther("3"),timestampBefore, timestampBefore+120)).to.be.revertedWith("Same Nft can't be list again!");
     }); 
-    it("24. Nft can be list other than owner - Failure", async () => {
+    it("24. Nft can't be list other than owner in Dutch Auction Maretplace- Failure", async () => {
         const blockNumBefore = await ethers.provider.getBlockNumber();
         const blockBefore = await ethers.provider.getBlock(blockNumBefore);
         const timestampBefore = blockBefore.timestamp;
@@ -415,4 +415,44 @@ describe("Listing Nft in Dutch Auction", () => {
         //Listing Nft
         await expect(marketplace.connect(account2).addDutchAuction(nftContract.address,0,ethers.utils.parseEther("5"),ethers.utils.parseEther("2"),timestampBefore, timestampBefore+120)).to.be.revertedWith("Nft can be list only by owner!");
     }); 
+    it("25. Nft current price should decrease as per discount rate in Dutch", async() => {
+        const blockNumBefore = await ethers.provider.getBlockNumber();
+        const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+        const timestampBefore = blockBefore.timestamp;
+        console.log("block.timestamp :- "+timestampBefore);
+
+        //Listing Nft
+        await marketplace.connect(account1).addDutchAuction(nftContract.address,0,ethers.utils.parseEther("5"),ethers.utils.parseEther("2"),timestampBefore, timestampBefore+180);
+
+        await ethers.provider.send('evm_increaseTime', [60000]);
+        await ethers.provider.send('evm_mine');
+
+        //checking if Nft is listed
+        const listedNft = await marketplace.getDutchAuctionListing(nftContract.address, 0);
+
+        //getting current price of nft to buy
+        let currentPrice = await marketplace.connect(account2).dutchPrice(nftContract.address,0);
+        
+        expect(BigInt(currentPrice)).not.to.be.equal(BigInt(listedNft.startPrice));
+    });
+    it("26. Buy Nft at current price from Dutch Auction Marketplace", async() => {
+        const blockNumBefore = await ethers.provider.getBlockNumber();
+        const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+        const timestampBefore = blockBefore.timestamp;
+        console.log("block.timestamp :- "+timestampBefore);
+
+        //Listing Nft
+        await marketplace.connect(account1).addDutchAuction(nftContract.address,0,ethers.utils.parseEther("5"),ethers.utils.parseEther("2"),timestampBefore, timestampBefore+180);
+
+        await ethers.provider.send('evm_increaseTime', [60000]);
+        await ethers.provider.send('evm_mine');
+
+        //getting current price of nft to buy
+        let currentPrice = await marketplace.connect(account2).dutchPrice(nftContract.address,0);
+        
+        //buy Nft
+        await marketplace.connect(account2).buyFromDutch(nftContract.address,0,{value: ethers.utils.parseEther(BigInt(currentPrice))});
+        let newOwner = await nftContract.ownerOf(0);
+        expect(newOwner).to.equal(account2.address);
+    });
 });
