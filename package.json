@@ -1,0 +1,21 @@
+{
+  "name": "3waynftmarketplace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@openzeppelin/contracts": "^4.8.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.0",
+    "hardhat": "^2.12.4",
+    "openzeppelin-solidity": "^4.6.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/hardhat-upgrades": "^1.22.0"
+  }
+}
