@@ -1,6 +1,5 @@
 const {expect} = require("chai");   //chai is library and mocha is a framework
 const { ethers } = require("hardhat");
-// const provider = waffle.provider;
 
 describe("Listing and Buying Nft from Fixed Price Marketplace", () => {
     beforeEach( async () => {
@@ -312,29 +311,5 @@ describe("Listing Nft in Dutch Auction", () => {
         expect(listedNft.startAt).to.equal(timestampBefore);
         expect(listedNft.endAt).to.equal(timestampBefore+120);
         expect(listedNft.duration).to.equal((listedNft.endAt - listedNft.startAt));
-    });
-    // it("8. Bidding details when no one has bid", async () => {
-    //     let time = Math.floor(Date.now() / 1000);
-    //     //Listing Nft
-    //     await marketplace.connect(account1).addEngAuction(nftContract.address,0,ethers.utils.parseEther("1"),time, time+120);
-
-    //     //checking if Nft is listed
-    //     const listedNft = await marketplace.getEngAuctionListing(nftContract.address, 0);
-    //     expect(listedNft.seller).to.equal(await nftContract.ownerOf(0));
-    //     expect(listedNft.basePrice).to.equal(ethers.utils.parseEther("1"));
-    //     expect(listedNft.startAt).to.equal(time);
-    //     expect(listedNft.endAt).to.equal(time+120);
-
-    //     //checking highest bidder and bid
-    //     const bid = await marketplace.getHighestBid(nftContract.address, 0);
-    //     expect(bid.highestBidder).to.equal(ethers.constants.AddressZero);
-    //     expect(bid.highestBid).to.equal(0);
-    // });
-    // it("9. Bid for not listed Nft in English Auction - Failure", async () => {
-    //     let time = Math.floor(Date.now() / 1000);
-    //     //Listing Nft
-    //     await marketplace.connect(account1).addEngAuction(nftContract.address,0,ethers.utils.parseEther("1"),time, time+120);
-    //     await expect(marketplace.connect(account2).bidFor(nftContract.address,1,{value: ethers.utils.parseEther("1")})).to.revertedWith("English Auction : Item is not listed.");
-    // });
-    
+    });  
 });
